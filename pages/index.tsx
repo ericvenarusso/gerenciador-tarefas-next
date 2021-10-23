@@ -15,7 +15,7 @@ const Index: NextPage = () => {
     }
   }, []);
 
-  return (accessToken ? <Home /> : <Login setToken={setToken} />)
+  return (accessToken ? <Home setToken={setToken} /> : <Login setToken={setToken} />)
 }
 
 export default Index

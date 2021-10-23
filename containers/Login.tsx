@@ -47,10 +47,7 @@ export const Login: NextPage<AccessTokenProps> = ({
             }
         }
 
-        setTimeout(() => {
-            setLoading(false);
-        }, 2000)
-
+        setLoading(false);
     }
 
     return (

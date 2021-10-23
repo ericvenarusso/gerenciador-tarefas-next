@@ -1,10 +1,24 @@
-import { useState } from "react";
+import { NextPage } from "next";
+import { Header } from "../components/Header";
+import { AccessTokenProps } from "../types/AccessTokenProps";
 
 /* eslint-disable @next/next/no-img-element */
-export const Home = () => {
+const Home: NextPage<AccessTokenProps> = ({
+    setToken
+}) => {
+
+    const logout = () => {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userMail');
+        setToken('');
+    }
+
     return (
-        <div className="container-login">
-            <h1>Home</h1>
-        </div>
+        <>
+            <Header logout={logout} />
+        </>
     );
 }
+
+export { Home }
