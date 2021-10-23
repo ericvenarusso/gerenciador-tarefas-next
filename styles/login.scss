@@ -8,6 +8,13 @@
         margin: auto;
         margin-bottom: 30px;
     }
+
+    .error{
+        text-align: center;
+        color: $errorColor;
+        font-weight: bold;
+        max-width: 300px;
+    }
     
     .input{
         display: flex;
@@ -66,6 +73,10 @@
         margin-top: 30px;
     }
 
+    .loading {
+        background-color: $mediumGreyColor;
+    }
+
     @media screen and(min-width:1024px) {
         width: 100%;
         display: flex;
@@ -76,6 +87,10 @@
         .logo{
             width: 520px;
             margin: 0px;
+        }
+
+        .error{
+            max-width: none;
         }
 
         form {
