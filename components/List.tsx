@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import { Task } from "../types/Task";
+import { Item } from "./Item";
 
 /* eslint-disable @next/next/no-img-element */
 
@@ -15,7 +16,7 @@ const List: NextPage<ListProps> = ({
         <div className={'container-list' + (tasks && tasks.length > 0 ? '' : ' vazia')}>
             {tasks && tasks.length > 0 
                 ?
-                    tasks.map(task => <p>{task.name}</p>)
+                    tasks.map(task => <Item task={task} key={task._id} />)
                 :
                     <>
                         <img src="/empty-list.svg" alt="Nenhuma tarefa encontrada"/>
