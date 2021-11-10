@@ -1,18 +1,28 @@
+import Link from "next/link"
 import { useState } from "react";
 import axios from 'axios';
 import { executeRequest } from "../services/api";
 import { NextPage } from "next";
+import { Modal } from "react-bootstrap";
 import { AccessTokenProps } from "../types/AccessTokenProps";
 
 /* eslint-disable @next/next/no-img-element */
 export const Login: NextPage<AccessTokenProps> = ({
     setToken
 }) => {
-
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setLoading] = useState(false);
+
+    // states do modal/form
+    const [showModal, setShowModal] = useState(false);
+    const [isRegisterLoading, setRegisterLoading] = useState(false)
+    const [registerSucessMessage, setRegisterSucessMessage] = useState('');
+    const [registerErrorMessage, setRegisterErrorMessage] = useState('');
+    const [nameModal, setNameModal] = useState('');
+    const [emailModal, setEmailModal] = useState('');
+    const [passwordModal, setPasswordModal] = useState('');
 
     const doLogin = async () => {
         try {
@@ -50,10 +60,53 @@ export const Login: NextPage<AccessTokenProps> = ({
         setLoading(false);
     }
 
+    const closeModal = () => {
+        setNameModal('');
+        setEmailModal('');
+        setPasswordModal('');
+        setShowModal(false);
+        setRegisterErrorMessage('');
+    }
+
+    const doRegister = async() => {
+        try {
+            setRegisterLoading(true);
+            setRegisterErrorMessage('');
+            setRegisterSucessMessage('');
+
+            if (!nameModal && !emailModal && !passwordModal) {
+                setRegisterErrorMessage('Favor informar os dados para cadastro do usuario');
+                setRegisterLoading(false);
+                return;
+            }
+
+            const body = {
+                "name": nameModal,
+                "email": emailModal,
+                "password": passwordModal
+            }
+
+            const result = await executeRequest('user', 'POST', body);
+            if (result && result.data) {
+                setRegisterSucessMessage('Usuario criado com sucesso')
+                closeModal();
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            if (e?.response?.data?.error) {
+                setRegisterErrorMessage(e?.response?.data?.error);
+            } else {
+                setRegisterErrorMessage('Não foi possivel cadastrar tarefa, tente novamente');
+            }
+        }
+        setRegisterLoading(false);
+    }
     return (
         <div className="container-login">
             <img src="/logo.svg" alt="Logo Fiap" className="logo" />
             <form>
+                <p className="sucess">{registerSucessMessage}</p>
                 <p className="error">{error}</p>
                 <div className="input">
                     <img src="/mail.svg" alt="Informe seu email" />
@@ -69,6 +122,42 @@ export const Login: NextPage<AccessTokenProps> = ({
                     className={isLoading ? 'loading' : ''}>
                     {isLoading ? '...Carregando' : 'Login'}
                 </button>
+                <button type="button" 
+                    onClick={() => setShowModal(true)}
+                >Registrar-se
+                </button>
+                <Modal show={showModal}
+                    onHide={() => closeModal()}
+                    className="container-modal">
+                    <Modal.Body>
+                        <p>Cadastro</p>
+                        {registerErrorMessage && <p className="error">{registerErrorMessage}</p>}
+                        <input type="text"
+                            placeholder="Nome"
+                            value={nameModal}
+                            onChange={e => setNameModal(e.target.value)} 
+                        />
+                        <input type="text"
+                            placeholder="e-mail"
+                            value={emailModal}
+                            onChange={e => setEmailModal(e.target.value)}
+                        />
+                        <input type="password"
+                            placeholder="Senha"
+                            value={passwordModal}
+                            onChange={e => setPasswordModal(e.target.value)}
+                        />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <div className="button col-12">
+                            <button
+                                onClick={doRegister}
+                                disabled={isRegisterLoading}
+                            >{isRegisterLoading ? "...Cadastrando" : "Cadastrar"}</button>
+                            <span onClick={closeModal}>Cancelar</span>
+                        </div>
+                    </Modal.Footer>
+                </Modal>
             </form>
         </div>
     )
