@@ -23,6 +23,7 @@ export const Login: NextPage<AccessTokenProps> = ({
     const [nameModal, setNameModal] = useState('');
     const [emailModal, setEmailModal] = useState('');
     const [passwordModal, setPasswordModal] = useState('');
+    const [passwordConfirmedModal, setPasswordConfirmedModal] = useState('');
 
     const doLogin = async () => {
         try {
@@ -76,6 +77,12 @@ export const Login: NextPage<AccessTokenProps> = ({
 
             if (!nameModal && !emailModal && !passwordModal) {
                 setRegisterErrorMessage('Favor informar os dados para cadastro do usuario');
+                setRegisterLoading(false);
+                return;
+            }
+
+            if (passwordModal !== passwordConfirmedModal){
+                setRegisterErrorMessage('As senhas informadas não coincidem');
                 setRegisterLoading(false);
                 return;
             }
@@ -146,6 +153,11 @@ export const Login: NextPage<AccessTokenProps> = ({
                             placeholder="Senha"
                             value={passwordModal}
                             onChange={e => setPasswordModal(e.target.value)}
+                        />
+                        <input type="password"
+                            placeholder="Confirme a senha"
+                            value={passwordConfirmedModal}
+                            onChange={e => setPasswordConfirmedModal(e.target.value)}
                         />
                     </Modal.Body>
                     <Modal.Footer>
