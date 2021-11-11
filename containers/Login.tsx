@@ -1,6 +1,4 @@
-import Link from "next/link"
 import { useState } from "react";
-import axios from 'axios';
 import { executeRequest } from "../services/api";
 import { NextPage } from "next";
 import { Modal } from "react-bootstrap";
@@ -65,6 +63,7 @@ export const Login: NextPage<AccessTokenProps> = ({
         setNameModal('');
         setEmailModal('');
         setPasswordModal('');
+        setPasswordConfirmedModal('');
         setShowModal(false);
         setRegisterErrorMessage('');
     }
